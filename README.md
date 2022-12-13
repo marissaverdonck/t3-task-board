@@ -1,7 +1,7 @@
 # T3 Task Board
 
 ## About
-T3 Task Board is a task management system. Users can add tasks to the board and change the status of it when the task is in progress or done. The board contains 3 different columns: "To do", "In Progress" and "Done". To change the status, the users can move the task to an other column. It helps the user keeping track of his/her to do list.
+T3 Task Board is a task management tool. Users can add tasks to the board and change the status of it when the task is in progress or done. The board contains 3 different columns: "To do", "In Progress" and "Done". To change the status, the users can move the task to an other column. It helps the user keeping track of his/her to do list.
 
 ## 
 
