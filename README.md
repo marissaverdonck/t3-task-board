@@ -59,7 +59,7 @@ The app is running on localhost:3000 and the API on http://localhost:5555/
 <img width="550" alt="Task" src="https://user-images.githubusercontent.com/43657951/207373406-d929d99a-1e6b-4d59-bd1d-a94f23ba0bb8.png">
 
 #### Edit task
-<img width="677" alt="Task" src="https://user-images.githubusercontent.com/43657951/207381794-e9730afe-ca8f-4c2b-8b93-bea852c809bb.png">
+<img width="550" alt="Task" src="https://user-images.githubusercontent.com/43657951/207381794-e9730afe-ca8f-4c2b-8b93-bea852c809bb.png">
 
 
 
