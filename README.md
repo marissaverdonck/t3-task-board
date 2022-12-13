@@ -59,7 +59,8 @@ The app is running on localhost:3000 and the API on http://localhost:5555/
 <img width="550" alt="Task" src="https://user-images.githubusercontent.com/43657951/207373406-d929d99a-1e6b-4d59-bd1d-a94f23ba0bb8.png">
 
 #### Edit task
-<img width="574" alt="Screenshot 2022-12-13 at 16 31 15" src="https://user-images.githubusercontent.com/43657951/207375871-b55dd3bf-3359-4bcb-833f-28499ff0806a.png">
+<img width="677" alt="Task" src="https://user-images.githubusercontent.com/43657951/207381794-e9730afe-ca8f-4c2b-8b93-bea852c809bb.png">
+
 
 
 
@@ -74,4 +75,4 @@ The app is running on localhost:3000 and the API on http://localhost:5555/
 
 
 ## Test strategy
-I will use the Diamond test strategy. The main goal of the app is creating and editing tasks, it is important that all functions inside the components work well together and API calls don't fail.
+The Diamond test strategy is used for this project. The main goal of the app is creating and editing tasks, it is important that all functions inside the components work well together and API calls don't fail.
