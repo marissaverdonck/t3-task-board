@@ -1,10 +1,11 @@
-# t3 Task board
+# T3 Task Board
 
 ## About
+T3 Task Board is a task management system. Users can add tasks to the board and change the status of it when the task is in progress or done. The board contains 3 different columns: "To do", "In Progress" and "Done". To change the status, the users can move the task to an other column. It helps the user keeping track of his/her to do list.
 
-Ever wondered how to migrate your T3 application into a monorepo? Stop right here! This is the perfect starter repo to get you running with the perfect stack!
+## 
 
-It uses [Turborepo](https://turborepo.org/) and contains:
+This t3 repo uses [Turborepo](https://turborepo.org/) and contains:
 
 ```
 .github
