@@ -37,7 +37,7 @@ const Home: NextPage = () => {
               <h1 className="text-3xl font-bold mr-2">Create task </h1>
               <button
                 type="button"
-                className="w-10 h-10 rounded-full  pt-0 pb-0.5 bg-black text-white font-semibold text-xl hover:bg-[#d3aa10]"
+                className="w-10 h-10 rounded-full  pt-0 pb-0.5 bg-black text-white font-semibold text-xl hover:scale-[103%]  "
                 onClick={() => setModalOpen(true)}
               >
                 +
@@ -86,7 +86,7 @@ const TaskCard: React.FC<{
   task: inferProcedureOutput<AppRouter['task']['all']>[number];
 }> = ({ task }) => {
   return (
-    <div className="bg-slate-500 p-5 my-3 rounded-lg w-4/5 hover:scale-[101%] transition-all">
+    <div className="bg-[#bc8f8f] p-5 my-3 rounded-lg w-4/5 hover:scale-[101%] transition-all">
       <h2 className="text-m font-bold text-white">{task.title}</h2>
       <p>{task.description}</p>
     </div>
@@ -99,7 +99,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex flex-col items-end">
       <button
-        className="rounded-full bg-black/10 px-10 py-3 font-semibold  no-underline transition hover:bg-white/20 hover:scale-[101%]"
+        className="rounded-lg   bg-gray-200 p-3 font-medium  no-underline transition hover:underline hover:decoration-solid"
         onClick={session ? () => signOut() : () => signIn()}
       >
         {session ? 'Sign out' : 'Sign in'}

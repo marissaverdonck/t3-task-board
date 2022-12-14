@@ -50,14 +50,14 @@ export const TaskModal: FC<TaskModalProps> = ({
         <div className="flex justify-end">
           <button
             type="button"
-            className="rounded-md bg-gray-400 text-white p-2.5 mr-2 w-20 hover:bg-[#d3aa10]"
+            className="rounded-lg border-2 border-black bg-white s text-black p-2.5 mr-2 w-20 hover:underline hover:decoration-solid"
             onClick={() => setModalOpen(false)}
           >
             Cancel
           </button>
           <button
             type="button"
-            className="rounded-md bg-black text-white p-2.5 w-20 hover:bg-[#d3aa10]"
+            className="rounded-lg bg-black text-white p-2.5 w-20 hover:underline hover:decoration-solid"
             onClick={() => {
               createTask({
                 title: inputTitle,
