@@ -37,20 +37,20 @@ afterAll(async () => {
   const ctx = await createContext();
   await ctx.prisma.user.deleteMany();
 });
-test('publicProcedure no user', async () => {
+test('a public procedure can be called without an user session', async () => {
   const ctx = await createContext();
   const caller = authRouter.createCaller(ctx);
   const session = await caller.getSession();
   expect(session).toBe(null);
 });
-test('publicProcedure with user', async () => {
+test('a public procedure can be called with an user session', async () => {
   const ctx = await createContext();
   ctx.session = await createFakeSession();
   const caller = authRouter.createCaller(ctx);
   const session = await caller.getSession();
   expect(session).not.toBe(null);
 });
-test('protectedProcedure no user', async () => {
+test('a protected procedure will throw an error without a user session', async () => {
   const ctx = await createContext();
   const caller = authRouter.createCaller(ctx);
   await expect(caller.getSecretMessage()).rejects.toThrowError(
@@ -58,7 +58,7 @@ test('protectedProcedure no user', async () => {
   );
 });
 
-test('protectedProcedure with user', async () => {
+test('a protected procedure can be called with a valid user session', async () => {
   const ctx = await createContext();
   ctx.session = await createFakeSession();
   const caller = authRouter.createCaller(ctx);
