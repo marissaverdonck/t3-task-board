@@ -8,7 +8,7 @@ interface TaskModalProps {
   setTaskItems: Dispatch<SetStateAction<Task[]>>;
 }
 
-export const TaskModal: FC<TaskModalProps> = ({
+export const CreateTaskModal: FC<TaskModalProps> = ({
   setModalOpen,
   setTaskItems,
 }) => {

@@ -1,24 +1,23 @@
 import { Task } from '@prisma/client';
-import type { inferProcedureOutput } from '@trpc/server';
 import type { NextPage } from 'next';
-import { signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
 import { useState } from 'react';
 
-import type { AppRouter } from '@test/api';
-
 import { trpc } from '@utils';
 
-import { TaskModal } from '../components/taskModal';
+import { CreateTaskModal } from '../components/createTaskModal';
+import { LoginButton } from '../components/loginButton';
+import { TaskCard } from '../components/taskCard';
 
 const Home: NextPage = () => {
+  const { data: session } = trpc.auth.getSession.useQuery();
   const { data: taskData, isLoading } = trpc.task.all.useQuery(undefined, {
     onSuccess(taskItems) {
       setTaskItems(taskItems);
     },
   });
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [taskItems, setTaskItems] = useState<Task[]>();
+  const [taskItems, setTaskItems] = useState<Task[]>([]);
 
   return (
     <>
@@ -29,51 +28,57 @@ const Home: NextPage = () => {
       </Head>
       <div className="bg-white p-8 w-full h-screen">
         <header>
-          <Login />
+          <div className="flex flex-col items-end">
+            <LoginButton />
+          </div>
         </header>
-        <main>
-          <section className="max-auto">
-            <section className="flex">
-              <h1 className="text-3xl font-bold mr-2">Create task </h1>
-              <button
-                type="button"
-                className="w-10 h-10 rounded-full  pt-0 pb-0.5 bg-black text-white font-semibold text-xl hover:scale-[103%]  "
-                onClick={() => setModalOpen(true)}
-              >
-                +
-              </button>
-            </section>
-            <section>
-              {!taskData || isLoading ? (
-                <p>Loading..</p>
-              ) : (
-                taskItems && (
-                  <div className="flex w-full mt-6">
-                    <div className="flex-none w-1/3">
-                      <h2 className="text-xl font-bold mr-2 mb-5">To do</h2>
+        {session?.user && (
+          <main>
+            <section className="max-auto">
+              <section className="flex">
+                <h1 className="text-3xl font-bold mr-2">Create task </h1>
+                <button
+                  type="button"
+                  className="w-10 h-10 rounded-full  pt-0 pb-0.5 bg-black text-white font-semibold text-xl hover:scale-[103%]  "
+                  onClick={() => setModalOpen(true)}
+                >
+                  +
+                </button>
+              </section>
+              <section>
+                {!taskData || isLoading ? (
+                  <p>Loading..</p>
+                ) : (
+                  taskItems && (
+                    <div className="flex w-full mt-6">
+                      <div className="flex-none w-1/3">
+                        <h2 className="text-xl font-bold mr-2 mb-5">To do</h2>
 
-                      <div className="">
-                        {taskItems?.map((p) => {
-                          return <TaskCard key={p.id} task={p} />;
-                        })}
+                        <div className="">
+                          {taskItems?.map((p) => {
+                            return <TaskCard key={p.id} task={p} />;
+                          })}
+                        </div>
+                      </div>
+                      <div className="flex-none w-1/3">
+                        <h2 className="text-xl font-bold mr-2 ">In progress</h2>
+                      </div>{' '}
+                      <div className="flex-none w-1/3">
+                        <h2 className="text-xl font-bold mr-2 ">Done</h2>
                       </div>
                     </div>
-                    <div className="flex-none w-1/3">
-                      <h2 className="text-xl font-bold mr-2 ">In progress</h2>
-                    </div>{' '}
-                    <div className="flex-none w-1/3">
-                      <h2 className="text-xl font-bold mr-2 ">Done</h2>
-                    </div>
-                  </div>
-                )
-              )}
+                  )
+                )}
+              </section>
+              <section className="mt-80"></section>
             </section>
-            <section className="mt-80"></section>
-          </section>
-        </main>
-
+          </main>
+        )}
         {modalOpen && (
-          <TaskModal setModalOpen={setModalOpen} setTaskItems={setTaskItems} />
+          <CreateTaskModal
+            setModalOpen={setModalOpen}
+            setTaskItems={setTaskItems}
+          />
         )}
       </div>
     </>
@@ -81,29 +86,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-const TaskCard: React.FC<{
-  task: inferProcedureOutput<AppRouter['task']['all']>[number];
-}> = ({ task }) => {
-  return (
-    <div className="bg-[#bc8f8f] p-5 my-3 rounded-lg w-4/5 hover:scale-[101%] transition-all">
-      <h2 className="text-m font-bold text-white">{task.title}</h2>
-      <p>{task.description}</p>
-    </div>
-  );
-};
-
-const Login: React.FC = () => {
-  const { data: session } = trpc.auth.getSession.useQuery();
-
-  return (
-    <div className="flex flex-col items-end">
-      <button
-        className="rounded-lg   bg-gray-200 p-3 font-medium  no-underline transition hover:underline hover:decoration-solid"
-        onClick={session ? () => signOut() : () => signIn()}
-      >
-        {session ? 'Sign out' : 'Sign in'}
-      </button>
-    </div>
-  );
-};
