@@ -1,23 +1,32 @@
 import { Task } from '@prisma/client';
 import type { NextPage } from 'next';
+import { signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
 import { useState } from 'react';
 
 import { trpc } from '@utils';
 
-import { CreateTaskModal } from '../components/createTaskModal';
-import { LoginButton } from '../components/loginButton';
-import { TaskCard } from '../components/taskCard';
+import { Button, Column, Modal } from '../components';
+import { COLUMN_STATUSES, COLUMN_LABELS } from '../utils/constants';
 
 const Home: NextPage = () => {
+  const utils = trpc.useContext();
   const { data: session } = trpc.auth.getSession.useQuery();
-  const { data: taskData, isLoading } = trpc.task.all.useQuery(undefined, {
-    onSuccess(taskItems) {
-      setTaskItems(taskItems);
+  const { data: taskData } = trpc.task.all.useQuery();
+  const { mutate: createTask } = trpc.task.create.useMutation({
+    onSuccess: () => {
+      utils.task.all.invalidate();
     },
   });
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [taskItems, setTaskItems] = useState<Task[]>([]);
+  const { mutate: updateTask } = trpc.task.update.useMutation({
+    onSuccess: () => {
+      utils.task.all.invalidate();
+    },
+  });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalItemData, setModalItemData] = useState<Task | undefined>(
+    undefined
+  );
 
   return (
     <>
@@ -29,7 +38,12 @@ const Home: NextPage = () => {
       <div className="bg-white p-8 w-full h-screen">
         <header>
           <div className="flex flex-col items-end">
-            <LoginButton />
+            <Button
+              variant="lightGrey"
+              onClick={session ? () => signOut() : () => signIn()}
+            >
+              {session ? 'Sign out' : 'Sign in'}
+            </Button>
           </div>
         </header>
         {session?.user && (
@@ -37,47 +51,39 @@ const Home: NextPage = () => {
             <section className="max-auto">
               <section className="flex">
                 <h1 className="text-3xl font-bold mr-2">Create task </h1>
-                <button
-                  type="button"
-                  className="w-10 h-10 rounded-full  pt-0 pb-0.5 bg-black text-white font-semibold text-xl hover:scale-[103%]  "
-                  onClick={() => setModalOpen(true)}
-                >
+                <Button variant="round" onClick={() => setModalOpen(true)}>
                   +
-                </button>
+                </Button>
               </section>
               <section>
-                {!taskData || isLoading ? (
-                  <p>Loading..</p>
-                ) : (
-                  taskItems && (
-                    <div className="flex w-full mt-6">
-                      <div className="flex-none w-1/3">
-                        <h2 className="text-xl font-bold mr-2 mb-5">To do</h2>
-
-                        <div className="">
-                          {taskItems?.map((p) => {
-                            return <TaskCard key={p.id} task={p} />;
-                          })}
-                        </div>
-                      </div>
-                      <div className="flex-none w-1/3">
-                        <h2 className="text-xl font-bold mr-2 ">In progress</h2>
-                      </div>{' '}
-                      <div className="flex-none w-1/3">
-                        <h2 className="text-xl font-bold mr-2 ">Done</h2>
-                      </div>
-                    </div>
-                  )
-                )}
+                <div className="flex w-full mt-6">
+                  <>
+                    {Object.values(COLUMN_STATUSES).map((key, index) => {
+                      return (
+                        <Column
+                          key={index}
+                          name={COLUMN_LABELS[key]}
+                          status={key}
+                          items={taskData}
+                          setModalOpen={setModalOpen}
+                          setModalItemData={setModalItemData}
+                        />
+                      );
+                    })}
+                  </>
+                </div>
               </section>
               <section className="mt-80"></section>
             </section>
           </main>
         )}
         {modalOpen && (
-          <CreateTaskModal
+          <Modal
             setModalOpen={setModalOpen}
-            setTaskItems={setTaskItems}
+            createItem={createTask}
+            editItem={updateTask}
+            modalItemData={modalItemData}
+            setModalItemData={setModalItemData}
           />
         )}
       </div>

@@ -10,11 +10,12 @@ afterEach(async () => {
   await ctx.prisma.task.deleteMany();
 });
 beforeEach(async () => {
+  await ctx.prisma.task.deleteMany();
   await ctx.prisma.task.create({
     data: {
       title: 'test title',
       description: 'test description',
-      status: 'to do',
+      status: 'to_do',
     },
   });
 });
@@ -33,7 +34,7 @@ test('all task items are given and contain the given input', async () => {
   expect(tasks[0]).toMatchObject({
     title: 'test title',
     description: 'test description',
-    status: 'to do',
+    status: 'to_do',
   });
 });
 test('the task item id is given and contains the given input', async () => {
@@ -42,7 +43,7 @@ test('the task item id is given and contains the given input', async () => {
   expect(task).toMatchObject({
     title: 'test title',
     description: 'test description',
-    status: 'to do',
+    status: 'to_do',
   });
 });
 
@@ -50,12 +51,12 @@ test('a new task item is created and contains the given input', async () => {
   const task = await taskService.createTask(
     'test title',
     'test description',
-    'to do'
+    'to_do'
   );
   expect(task).toMatchObject({
     title: 'test title',
     description: 'test description',
-    status: 'to do',
+    status: 'to_do',
   });
 });
 

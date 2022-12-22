@@ -6,7 +6,7 @@
     "db-generate": "turbo db-generate",
     "db-push": "turbo db-push",
     "build": "turbo build",
-    "test": "turbo test",
+    "test": "pnpm vitest --no-threads",
     "postinstall": "turbo db-generate && turbo db-push",
     "dev": "turbo dev --parallel",
     "clean:workspaces": "turbo clean",
