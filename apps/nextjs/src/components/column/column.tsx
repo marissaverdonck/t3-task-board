@@ -1,12 +1,12 @@
 import { Task } from '@prisma/client';
 import { Dispatch, FC, SetStateAction } from 'react';
 
+import { useGetTaskData } from '../../hooks/useTaskData';
 import { Card } from '../index';
 
 interface ColumnProps {
   name: string;
   status: string;
-  items?: Task[];
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   setModalItemData: Dispatch<SetStateAction<Task | undefined>>;
 }
@@ -14,17 +14,15 @@ interface ColumnProps {
 export const Column: FC<ColumnProps> = ({
   name,
   status,
-  items,
   setModalOpen,
   setModalItemData,
 }) => {
-  console.log(status);
-
+  const taskData = useGetTaskData();
   return (
     <div className="flex-none w-1/3">
       <h2 className="text-xl font-bold mr-2 mb-5">{name}</h2>
       <div className="">
-        {items?.map((item) => {
+        {taskData?.map((item) => {
           if (item.status === status) {
             return (
               <Card

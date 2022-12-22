@@ -4,29 +4,16 @@ import { signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
 import { useState } from 'react';
 
-import { trpc } from '@utils';
-
 import { Button, Column, Modal } from '../components';
+import { useSession } from '../hooks';
 import { COLUMN_STATUSES, COLUMN_LABELS } from '../utils/constants';
 
 const Home: NextPage = () => {
-  const utils = trpc.useContext();
-  const { data: session } = trpc.auth.getSession.useQuery();
-  const { data: taskData } = trpc.task.all.useQuery();
-  const { mutate: createTask } = trpc.task.create.useMutation({
-    onSuccess: () => {
-      utils.task.all.invalidate();
-    },
-  });
-  const { mutate: updateTask } = trpc.task.update.useMutation({
-    onSuccess: () => {
-      utils.task.all.invalidate();
-    },
-  });
   const [modalOpen, setModalOpen] = useState(false);
   const [modalItemData, setModalItemData] = useState<Task | undefined>(
     undefined
   );
+  const session = useSession();
 
   return (
     <>
@@ -39,7 +26,7 @@ const Home: NextPage = () => {
         <header>
           <div className="flex flex-col items-end">
             <Button
-              variant="lightGrey"
+              variant={session ? 'secondary' : 'primary'}
               onClick={session ? () => signOut() : () => signIn()}
             >
               {session ? 'Sign out' : 'Sign in'}
@@ -64,7 +51,6 @@ const Home: NextPage = () => {
                           key={index}
                           name={COLUMN_LABELS[key]}
                           status={key}
-                          items={taskData}
                           setModalOpen={setModalOpen}
                           setModalItemData={setModalItemData}
                         />
@@ -80,8 +66,6 @@ const Home: NextPage = () => {
         {modalOpen && (
           <Modal
             setModalOpen={setModalOpen}
-            createItem={createTask}
-            editItem={updateTask}
             modalItemData={modalItemData}
             setModalItemData={setModalItemData}
           />

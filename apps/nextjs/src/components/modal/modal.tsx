@@ -1,20 +1,21 @@
 import { Task } from '@prisma/client';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 
+import {
+  useCreateTaskData,
+  useDeleteTaskData,
+  useUpdateTaskData,
+} from '../../hooks/useTaskData';
 import { Button } from '../index';
 
 interface TaskModalProps {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
-  createItem: any;
-  editItem: any;
   modalItemData?: Task;
   setModalItemData: Dispatch<SetStateAction<Task | undefined>>;
 }
 
 export const Modal: FC<TaskModalProps> = ({
   setModalOpen,
-  createItem,
-  editItem,
   modalItemData,
   setModalItemData,
 }) => {
@@ -27,6 +28,10 @@ export const Modal: FC<TaskModalProps> = ({
   const [inputStatus, setInputStatus] = useState<string>(
     modalItemData ? modalItemData.status : 'to_do'
   );
+
+  const createItem = useCreateTaskData();
+  const editItem = useUpdateTaskData();
+  const deleteItem = useDeleteTaskData();
 
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black/75">
@@ -70,12 +75,27 @@ export const Modal: FC<TaskModalProps> = ({
             <option value="done">Done</option>
           </select>
         </div>
+        {modalItemData?.id && (
+          <div>
+            <Button
+              variant="link"
+              onClick={() => {
+                deleteItem(modalItemData?.id);
+                setModalOpen(false);
+                setModalItemData(undefined);
+              }}
+            >
+              Delete this task
+            </Button>
+          </div>
+        )}
         <div className="flex justify-end">
           <Button
             variant="secondary"
             onClick={() => {
               setModalItemData(undefined);
               setModalOpen(false);
+              setModalItemData(undefined);
             }}
           >
             Cancel
@@ -98,6 +118,7 @@ export const Modal: FC<TaskModalProps> = ({
                     });
               }
               setModalOpen(false);
+              setModalItemData(undefined);
             }}
           >
             {modalItemData?.id ? 'Save' : 'Add'}
